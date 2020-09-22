@@ -1,0 +1,13 @@
+{
+  "name": "font-to-svg",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "José Rodrigues <jyrodrigues@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+      "runit": "node index.js"
+  },
+  "dependencies": {
+    "ttf2svg": "^1.2.0"
+  }
+}
