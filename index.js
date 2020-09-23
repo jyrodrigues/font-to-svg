@@ -8,10 +8,12 @@ fs.readFile('./Barlow/Barlow-Light.ttf', function (err, buffer) {
     if (!!err) throw err;
 
     const svgContent = ttf2svg(buffer);
-    // fs.writeFileSync('./Barlow-Light.svg', svgContent);
-    const root = svgParser.parse(svgContent);
-    // console.log(util.inspect(parsed, false, null, true));
 
+    // fs.writeFileSync('./Barlow-Light.svg', svgContent);
+
+    const root = svgParser.parse(svgContent);
+
+    // console.log(util.inspect(parsed, false, null, true));
     // fs.writeFileSync('./Barlow-Light.json', JSON.stringify(parsed));
 
     let svg = root.children[0];
@@ -26,22 +28,41 @@ fs.readFile('./Barlow/Barlow-Light.ttf', function (err, buffer) {
 
     for (glyph of glyphs) {
         let char = String.fromCharCode(parseInt(glyph.properties.unicode.replace("&#x", ""),16))
-        if (char != "A") { continue }
-        let path = glyph.properties.d;
-        let transformed = svgpath(path)
-            .scale(10/advanceRatio)
+        if (!"Welcome".includes(char)) { continue }
+
+        let rawPath = glyph.properties.d;
+        let pathStr = svgpath(rawPath)
             .scale(1, -1)
+            .translate(0, glyph.properties['vert-adv-y'] / 4)
+            .scale(10/advanceRatio)
             .rel()
-            .round(6)
             .toString();
-        console.log(transformed);
-        // break;
+
+        let path = svgpath(pathStr);
+
+        let movesToUndo = [];
+        for (let segment of path.segments) {
+            if (segment[0] === 'M') { segment[0] = 'm'; }
+            if (segment[0] === 'm') {
+                movesToUndo.push([...segment]);
+            }
+        }
+        while (movesToUndo.length > 0) {
+            let move = movesToUndo.pop();
+            move[1] = -move[1];
+            move[2] = -move[2];
+            path.segments.push(move);
+        }
+        path.segments.push(
+            [ 'm', (glyph.properties['horiz-adv-x'] / advanceRatio) * 10, 0 ],
+            // [ 'l', 10, 0 ]
+        )
+
+        // console.log(char);
+        // console.log(glyph.properties);
+        // console.log(util.inspect(path, false, null, true));
+        console.log(path.round(6).toString());
     }
 
-    // let i = 0;
-    // for (let c of parsed.children[0].children) {
-    //     console.log(util.inspect(c, false, null, true));
-    //     i++;
-    //     if (i > 10 ) { break; }
-    // }
+
 });
