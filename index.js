@@ -97,7 +97,6 @@ lettersDict =
     let count = 0;
 
     for (let glyph in glyphsObject) {
-        if (glyph !== '0') { continue; }
         if (count === 0) {
             elmCode += `\n        [ ( '${glyph}'`;
         } else {
