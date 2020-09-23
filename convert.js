@@ -37,6 +37,7 @@ function inv(str) {
 }
 
 
+
 for (let c in map) {
     let s = map[c];
     let b = s.split(/(?=[mqlz])/);

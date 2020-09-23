@@ -5,9 +5,11 @@
   "author": "José Rodrigues <jyrodrigues@gmail.com>",
   "license": "MIT",
   "scripts": {
-      "runit": "node index.js"
+    "runit": "node index.js"
   },
   "dependencies": {
+    "svg-parser": "^2.0.4",
+    "svgpath": "^2.3.0",
     "ttf2svg": "^1.2.0"
   }
 }
